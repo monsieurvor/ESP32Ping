@@ -2,13 +2,14 @@
 #define PING_H
 #include <Arduino.h>
 
-typedef void(*ping_recv_function)(void* arg, void *pdata);
-typedef void(*ping_sent_function)(void* arg, void *pdata);
+typedef void(*ping_recv_function)(void* arg, void *pdata, void *instance);
+typedef void(*ping_sent_function)(void* arg, void *pdata, void *instance);
 
 struct ping_option {
     uint32_t count;
     uint32_t ip;
     uint32_t coarse_time;
+    uint16_t timeout;
     ping_recv_function recv_function;
     ping_sent_function sent_function;
     void* reverse;
@@ -25,7 +26,7 @@ struct ping_resp {
     int8_t  ping_err;
 };
 
-bool ping_start(struct ping_option *ping_opt);
+bool ping_start(struct ping_option *ping_opt, void *instance);
 void ping(const char *name, int count, int interval, int size, int timeout);
 bool ping_start(IPAddress adr, int count, int interval, int size, int timeout, struct ping_option *ping_o = NULL);
 

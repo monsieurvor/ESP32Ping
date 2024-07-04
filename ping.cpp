@@ -255,10 +255,10 @@ void ping(const char *name, int count, int interval, int size, int timeout) {
     ping_start(adr, count, interval, size, timeout);
 }
 
-bool ping_start(struct ping_option *ping_o) {
+bool ping_start(struct ping_option *ping_o, void *instance) {
 
 
-    return ping_start(ping_o->ip,ping_o->count,0,0,0,ping_o);
+    return ping_start(ping_o->ip,ping_o->count,ping_o->interval,0,ping_o->timeout,ping_o);
 
 }
 bool ping_start(IPAddress adr, int count=0, int interval=0, int size=0, int timeout=0, struct ping_option *ping_o) {
@@ -356,7 +356,7 @@ bool ping_start(IPAddress adr, int count=0, int interval=0, int size=0, int time
         pingresp.total_time = (millis() - ping_started_time) / 1000.0; //Time consumed for all pings; it takes into account also timeout pings
         pingresp.ping_err = transmitted - received; //number of pings failed
         // Call the callback function
-        ping_o->recv_function(ping_o, &pingresp);
+        ping_o->recv_function(ping_o, &pingresp, instance);
     }
     
     // Return true if at least one ping had a successfull "pong" 

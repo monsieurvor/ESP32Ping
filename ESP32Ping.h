@@ -48,9 +48,9 @@ class PingClass {
 public:
     PingClass();
 
-    bool ping(IPAddress dest, byte count = 5);
+    bool ping(IPAddress dest, byte count = 2, uint16_t interval = 500, uint16_t timeout = 1000);
 
-    bool ping(const char *host, byte count = 5);
+    bool ping(const char *host, byte count = 2, uint16_t interval = 500, uint16_t timeout = 500);
 
     float averageTime();
 
@@ -62,11 +62,8 @@ protected:
     IPAddress _dest;
     ping_option _options;
 
-    static byte _expected_count, _errors, _success;
-    static float _avg_time;
+    byte _expected_count, _errors, _success;
+    float _avg_time;
 };
-
-
-extern PingClass Ping;
 
 #endif

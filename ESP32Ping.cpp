@@ -24,7 +24,7 @@ extern "C" void esp_yield(void) {};
 
 PingClass::PingClass() {}
 
-bool PingClass::ping(IPAddress dest, byte count) {
+bool PingClass::ping(IPAddress dest, byte count, uint16_t interval, uint16_t timeout) {
     _expected_count = count;
     _errors = 0;
     _success = 0;
@@ -35,21 +35,21 @@ bool PingClass::ping(IPAddress dest, byte count) {
 
     // Repeat count (how many time send a ping message to destination)
     _options.count = count;
-    // Time interval between two ping (seconds??)
-    _options.coarse_time = 1;
+    // Time interval between two ping
+    _options.coarse_time = interval;
     // Destination machine
     _options.ip = dest;
 
     // Callbacks
-    _options.recv_function = reinterpret_cast<ping_recv_function>(&PingClass::_ping_recv_cb);
+    _options.recv_function = reinterpret_cast<ping_recv_function>(&PingClass::_ping_recv_cb, (void *)this);
     _options.sent_function = NULL; //reinterpret_cast<ping_sent_function>(&_ping_sent_cb);
 
     
     // Suspend till the process end
-    esp_yield(); // ????????? Where should this be placed?
+    esp_yield();
     
     // Let's go!
-    ping_start(&_options); // Here we do all the work
+    ping_start(&_options, (void *)this); // Here we do all the work
 
     // Returns true if at least 1 ping had a pong response 
     return (_success > 0); //_success variable is changed by the callback function
@@ -68,15 +68,16 @@ float PingClass::averageTime() {
     return _avg_time;
 }
 
-void PingClass::_ping_recv_cb(void *opt, void *resp) {
+void PingClass::_ping_recv_cb(void *opt, void *resp, void *inst) {
     // Cast the parameters to get some usable info
     ping_resp *ping_resp = reinterpret_cast<struct ping_resp *>(resp);
+    PingClass instance* = reinterpret_cast<PingClass *>(inst);
     //ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
 
     // Error or success?
-    _errors = ping_resp->timeout_count;
-    _success = ping_resp->total_count - ping_resp->timeout_count;
-    _avg_time = ping_resp->resp_time;
+    instance->_errors = ping_resp->timeout_count;
+    instance->_success = ping_resp->total_count - ping_resp->timeout_count;
+    instance->_avg_time = ping_resp->resp_time;
     
 
     // Some debug info
@@ -102,14 +103,7 @@ void PingClass::_ping_recv_cb(void *opt, void *resp) {
     esp_schedule();
     
     // just a check ...
-    if (_success + _errors != _expected_count) {
-        DEBUG_PING("Something went wrong: _success=%d and _errors=%d do not sum up to _expected_count=%d\n",_success, _errors, _expected_count );
+    if (instance->_success + instance->_errors != instance->_expected_count) {
+        DEBUG_PING("Something went wrong: _success=%d and _errors=%d do not sum up to _expected_count=%d\n",instance->_success, instance->_errors, instance->_expected_count );
     }
 }
-
-byte PingClass::_expected_count = 0;
-byte PingClass::_errors = 0;
-byte PingClass::_success = 0;
-float PingClass::_avg_time = 0;
-
-PingClass Ping;
