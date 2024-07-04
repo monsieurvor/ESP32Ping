@@ -6,11 +6,10 @@ typedef void(*ping_recv_function)(void* arg, void *pdata, void *instance);
 typedef void(*ping_sent_function)(void* arg, void *pdata, void *instance);
 
 struct ping_option {
-    uint32_t count;
-    uint32_t ip;
-    uint32_t coarse_time;
-    uint16_t interval;
-    uint16_t timeout;
+    uint32_t count = 0;
+    uint32_t ip = 0;
+    uint32_t coarse_time = 500;
+    uint16_t timeout = 1000;
     ping_recv_function recv_function;
     ping_sent_function sent_function;
     void* reverse;

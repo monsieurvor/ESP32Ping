@@ -46,8 +46,6 @@ void esp_yield(void);
 
 class PingClass {
 public:
-    PingClass();
-
     bool ping(IPAddress dest, byte count = 2, uint16_t interval = 500, uint16_t timeout = 1000);
 
     bool ping(const char *host, byte count = 2, uint16_t interval = 500, uint16_t timeout = 1000);
@@ -62,8 +60,8 @@ protected:
     IPAddress _dest;
     ping_option _options;
 
-    byte _expected_count, _errors, _success;
-    float _avg_time;
+    byte _expected_count = 0, _errors = 0, _success = 0;
+    float _avg_time = 0;
 };
 
 #endif

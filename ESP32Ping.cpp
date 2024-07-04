@@ -22,8 +22,6 @@
 extern "C" void esp_schedule(void) {};
 extern "C" void esp_yield(void) {};
 
-PingClass::PingClass() {}
-
 bool PingClass::ping(IPAddress dest, byte count, uint16_t interval, uint16_t timeout) {
     _expected_count = count;
     _errors = 0;
@@ -37,6 +35,7 @@ bool PingClass::ping(IPAddress dest, byte count, uint16_t interval, uint16_t tim
     _options.count = count;
     // Time interval between two ping
     _options.coarse_time = interval;
+    _options.timeout = timeout;
     // Destination machine
     _options.ip = dest;
 
