@@ -50,14 +50,14 @@ public:
 
     bool ping(IPAddress dest, byte count = 2, uint16_t interval = 500, uint16_t timeout = 1000);
 
-    bool ping(const char *host, byte count = 2, uint16_t interval = 500, uint16_t timeout = 500);
+    bool ping(const char *host, byte count = 2, uint16_t interval = 500, uint16_t timeout = 1000);
 
     float averageTime();
 
 protected:
     static void _ping_sent_cb(void *opt, void *pdata);
 
-    static void _ping_recv_cb(void *opt, void *pdata);
+    static void _ping_recv_cb(void *opt, void *pdata, void *inst);
 
     IPAddress _dest;
     ping_option _options;

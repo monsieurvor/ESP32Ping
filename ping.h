@@ -9,6 +9,7 @@ struct ping_option {
     uint32_t count;
     uint32_t ip;
     uint32_t coarse_time;
+    uint16_t interval;
     uint16_t timeout;
     ping_recv_function recv_function;
     ping_sent_function sent_function;

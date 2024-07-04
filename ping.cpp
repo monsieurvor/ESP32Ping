@@ -98,13 +98,13 @@ static float var_time = 0;
 #define PING_DEFAULT_COUNT    10
 #endif
 #ifndef PING_DEFAULT_INTERVAL
-#define PING_DEFAULT_INTERVAL  1
+#define PING_DEFAULT_INTERVAL  500
 #endif
 #ifndef PING_DEFAULT_SIZE
 #define PING_DEFAULT_SIZE     32
 #endif
 #ifndef PING_DEFAULT_TIMEOUT
-#define PING_DEFAULT_TIMEOUT   1
+#define PING_DEFAULT_TIMEOUT   1000
 #endif
 
 /*
@@ -297,8 +297,8 @@ bool ping_start(IPAddress adr, int count=0, int interval=0, int size=0, int time
     struct timeval tout;
 
     // Timeout
-    tout.tv_sec = timeout;
-    tout.tv_usec = 0;
+    toutt.tv_sec = 0;
+    tout.tv_usec = timeout;
 
     if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &tout, sizeof(tout)) < 0) {
         closesocket(s);
@@ -331,7 +331,7 @@ bool ping_start(IPAddress adr, int count=0, int interval=0, int size=0, int time
             ping_recv(s);
         }
         if(ping_seq_num < count){
-            delay( interval*1000L);
+            delay(interval);
         }
     }
 

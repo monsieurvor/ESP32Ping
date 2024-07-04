@@ -55,7 +55,7 @@ bool PingClass::ping(IPAddress dest, byte count, uint16_t interval, uint16_t tim
     return (_success > 0); //_success variable is changed by the callback function
 }
 
-bool PingClass::ping(const char *host, byte count) {
+bool PingClass::ping(const char *host, byte count, uint16_t interval, uint16_t timeout) {
     IPAddress remote_addr;
 
     if (WiFi.hostByName(host, remote_addr))
@@ -71,7 +71,7 @@ float PingClass::averageTime() {
 void PingClass::_ping_recv_cb(void *opt, void *resp, void *inst) {
     // Cast the parameters to get some usable info
     ping_resp *ping_resp = reinterpret_cast<struct ping_resp *>(resp);
-    PingClass instance* = reinterpret_cast<PingClass *>(inst);
+    PingClass *instance = reinterpret_cast<PingClass *>(inst);
     //ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
 
     // Error or success?
