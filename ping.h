@@ -28,6 +28,6 @@ struct ping_resp {
 
 bool ping_start(struct ping_option *ping_opt, void *instance);
 void ping(const char *name, int count, int interval, int size, int timeout);
-bool ping_start(IPAddress adr, int count, int interval, int size, int timeout, struct ping_option *ping_o = NULL);
+bool ping_start(IPAddress adr, int count, int interval, int size, int timeout, struct ping_option *ping_o = NULL, void *instance = NULL);
 
 #endif // PING_H

@@ -258,10 +258,10 @@ void ping(const char *name, int count, int interval, int size, int timeout) {
 bool ping_start(struct ping_option *ping_o, void *instance) {
 
 
-    return ping_start(ping_o->ip,ping_o->count,ping_o->coarse_time,0,ping_o->timeout,ping_o);
+    return ping_start(ping_o->ip,ping_o->count,ping_o->coarse_time,0,ping_o->timeout,ping_o, instance);
 
 }
-bool ping_start(IPAddress adr, int count=0, int interval=0, int size=0, int timeout=0, struct ping_option *ping_o) {
+bool ping_start(IPAddress adr, int count=0, int interval=0, int size=0, int timeout=0, struct ping_option *ping_o, void *instance) {
 //	driver_error_t *error;
     struct sockaddr_in address;
     ip4_addr_t ping_target;
@@ -297,7 +297,7 @@ bool ping_start(IPAddress adr, int count=0, int interval=0, int size=0, int time
     struct timeval tout;
 
     // Timeout
-    toutt.tv_sec = 0;
+    tout.tv_sec = 0;
     tout.tv_usec = timeout;
 
     if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &tout, sizeof(tout)) < 0) {
